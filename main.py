@@ -17,5 +17,29 @@ column_names = ['age', 'workclass', 'fnlwgt', 'education', 'educational-num', 'm
 # 给列取名
 
 df.columns = column_names
-
 print(df.info())
+# describe一下数值型数据
+print(df.describe())
+
+
+def one_hot_convert(dataframe: pd.DataFrame, df_col):
+    """
+    One hot 转换器
+    :param dataframe: 原始dataframe
+    :param df_col: 需要转换的列名
+    :return:
+    """
+    # drop掉原来的列
+    df_drop = dataframe.drop(columns=df_col, axis=1)
+    # 使用get_dummies方法进行onehot，参考 https://pandas.pydata.org/docs/reference/api/pandas.get_dummies.html
+    df_converted = pd.get_dummies(dataframe[df_col])
+
+    return pd.concat([df_drop, df_converted], axis=1, join='inner') #返回拼接结果
+
+
+# 原始数据
+print(df.head())
+
+# 转换workclass
+df = one_hot_convert(df, "workclass")
+print(df.head())
